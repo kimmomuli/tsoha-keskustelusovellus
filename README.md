@@ -1,6 +1,6 @@
 # tsoha-keskustelusovellus
 
-Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja.
+Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käyttäjä voi luoda oman keskusteluketjun tai osallistua muiden luomiin ketjuihin.
 
 ### Ominaisuuksia:
 - Käyttäjä voi luoda tunnuksen. Tunnuksella voi kirjautua sisään ja ulos.
