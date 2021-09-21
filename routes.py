@@ -4,9 +4,10 @@ import user
 
 @app.route("/")
 def index():
-    if session.get("username"):
-        return render_template("index.html")
-    else:
+    try:
+        if session["username"]:
+            return render_template("index.html")
+    except:
         return render_template("login.html")
 
 @app.route("/login", methods=["POST", "GET"])
