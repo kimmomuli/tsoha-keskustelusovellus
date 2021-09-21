@@ -25,17 +25,20 @@ def login():
 def new_user():
     return render_template("new_user.html")
 
-@app.route("/create", methods=["POST"])
+@app.route("/create", methods=["POST", "GET"])
 def create():
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
-    if password1 != password2:
-        return render_template("new_user.html", message="Salasanat eivät ole samat")
-    if user.create(username, password1):
-        return redirect("/")
-    else:
-        return render_template("new_user.html", message="Tilin luonti ei onnistunut")
+    if request.method == "GET":
+        return render_template("home.html")
+    if request.method == "POST":
+        username = request.form["username"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
+        if password1 != password2:
+            return render_template("new_user.html", message="Salasanat eivät ole samat")
+        if user.create(username, password1):
+            return redirect("/")
+        else:
+            return render_template("new_user.html", message="Tilin luonti ei onnistunut")
 
 @app.route("/log_out")
 def log_out():
