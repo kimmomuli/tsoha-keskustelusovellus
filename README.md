@@ -14,4 +14,4 @@ Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käytt
 - Ylläpitäjä voi poistaa käyttäjän
 - Ylläpitäjä voi luoda rajoitetun alueen ja määrittää kellä on pääsy rajoitetulle alueelle.
 
-
+Linkki [Herokuun](https://git.heroku.com/tsoha-keskustelusovellus.git)
