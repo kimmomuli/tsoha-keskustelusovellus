@@ -9,14 +9,17 @@ def index():
     else:
         return render_template("login.html")
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
-    if user.login(username,password):
-        return redirect("/")
-    else:
-        return render_template("login.html", message="Väärä käyttäjätunnus tai salasana")
+    if request.method == "GET":
+        return render_template("login.html")
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        if user.login(username,password):
+            return redirect("/")
+        else:
+            return render_template("login.html", message="Väärä käyttäjätunnus tai salasana")
 
 @app.route("/new_user")
 def new_user():
