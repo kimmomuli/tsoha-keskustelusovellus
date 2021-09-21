@@ -11,6 +11,7 @@ CREATE TABLE topic (
 );
 
 CREATE TABLE messages (
-    id SERIAL PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP
 );
 

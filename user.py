@@ -13,7 +13,6 @@ def login(username, password):
             return True
     return False
             
-
 def create(username, password):
     hash_value = generate_password_hash(password)
     try:
