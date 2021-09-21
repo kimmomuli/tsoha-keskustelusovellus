@@ -1,2 +1,7 @@
+{% if session.username %}
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <p><a href="/log_out">Kirjaudu ulos</a></p>
+{% else %}
+<p>Et Ole kirjautunut</p>
+<p><a href="/login">Kirjaudu sisään</a></p>
+{% endif %}

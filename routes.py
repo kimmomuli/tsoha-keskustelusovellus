@@ -4,12 +4,13 @@ import user
 
 @app.route("/")
 def index():
-    return render_template("login.html")
+    return render_template("index.html")
 
-@app.route("/login", methods=["POST", "GET"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -25,13 +26,15 @@ def new_user():
 @app.route("/create", methods=["POST", "GET"])
 def create():
     if request.method == "GET":
-        return render_template("home.html")
+        return render_template("new_user.html")
+
     if request.method == "POST":
         username = request.form["username"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         if password1 != password2:
             return render_template("new_user.html", message="Salasanat eivät ole samat")
+            
         if user.create(username, password1):
             return redirect("/")
         else:
