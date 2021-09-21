@@ -2,7 +2,7 @@ from app import app
 from flask import Flask, redirect, render_template, session, request
 import user
 
-@app.route("/", methods=["GET"])
+@app.route("/")
 def index():
     if session.get("username"):
         return render_template("index.html")
