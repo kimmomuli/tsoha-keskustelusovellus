@@ -1,10 +1,11 @@
 from app import app
 from flask import Flask, redirect, render_template, session, request
-import user
+import user, thread, topic
+from werkzeug.exceptions import abort
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", topics = topic.get_all())
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -44,3 +45,21 @@ def create():
 def log_out():
     user.log_out()
     return redirect("/")
+
+@app.route("/new_topic")
+def new_topic():
+    return render_template("new_topic.html")
+
+@app.route("/create_topic", methods=["POST"])
+def create_topic():
+    user.csrf(request.form["csrf_token"])
+    title = request.form["topic"]
+    if 0 < len(title) < 200:
+        if topic.create(title):
+            return redirect("/")
+        return render_template("new_topic.html", message="Aiheen luonnissa tapahtui virhe")
+    else:
+        return render_template("new_topic.html", message="Aiheen pituus pitää olla 1-200")
+
+
+    

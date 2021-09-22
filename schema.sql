@@ -7,11 +7,21 @@ CREATE TABLE users (
 );
 
 CREATE TABLE topic (
-    id SERIAL PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP,
+    title TEXT
+);
+
+CREATE TABLE thread (
+    id SERIAL PRIMARY KEY,
+    topic_id INTEGER REFERENCES topic, 
+    created_at TIMESTAMP,
+    owner_id INTEGER REFERENCES users 
 );
 
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
-    created_at TIMESTAMP
+    thread_id INTEGER REFERENCES thread,
+    message TEXT
 );
 

@@ -1,7 +1,26 @@
 {% if session.username %}
+<h1>Keskustelusovellus</h1>
+<hr>
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <p><a href="/log_out">Kirjaudu ulos</a></p>
+<hr>
+<p><a href="/new_topic">Luo aihe</a></p>
+<hr>
+{% if topics %}
+
+{% for topic in topics %}
+<p>{{ topic[0] }}</p>
+{% endfor %}
+
 {% else %}
+<!-- Ei aiheita -->
+<p>Ei yhtään aihetta</p>
+{% endif %}
+
+
+{% else %}
+
 <p>Et Ole kirjautunut</p>
 <p><a href="/login">Kirjaudu sisään</a></p>
+
 {% endif %}
