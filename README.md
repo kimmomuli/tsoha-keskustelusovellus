@@ -6,7 +6,7 @@ Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käytt
 - [x] Käyttäjä voi luoda tunnuksen. Tunnuksella voi kirjautua sisään ja ulos.
 - [ ] Sovelluksen etusivulla on lista alueista sekä jokaisen alueen ketjujen ja viestien määrä. Listalla on myös viimeksi lähetetyn viestin ajankohta.
 - [ ] Alueella käyttäjä voi luoda uuden viestiketjun. Viestiketjun luomiseen tarvitsee otsikon ja aloitusviestin.
-- [ ] Käyttäjä voi valmiiseen viestiketjuun ja kirjoittaa uuden viestin.
+- [ ] Käyttäjä voi kirjoittaa uuden viestin valmiiseen viestiketjuun.
 - [ ] Käyttäjä voi muokata oman viestiketjun otsikkoa ja aloitusviestiä.
 - [ ] Käyttäjä voi  poistaa luomansa viestiketjun.
 - [ ] Käyttäjä voi hakea viestit hakutoiminnolla, johon annetaan hakusana.
