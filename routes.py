@@ -1,6 +1,6 @@
 from app import app
 from flask import Flask, redirect, render_template, session, request
-import user, thread, topic
+import user, thread, topic, messages
 from werkzeug.exceptions import abort
 
 @app.route("/")
@@ -77,3 +77,18 @@ def create_thread(topic_id):
     if not thread.add_thread(topic_id, thread_topic):
         return render_template("new_thread.html", topic_id=topic_id, message = "Viestiketjun lisääminen ei onnistunut")
     return redirect(f"/threads/{topic_id}")
+
+@app.route("/get_messages/<int:thread_id>")
+def get_messages(thread_id):
+    return render_template("messages.html", messages=messages.get_messages(thread_id), thread_id=thread_id)
+
+@app.route("/new_message/<int:thread_id>")
+def new_message(thread_id):
+    return render_template("new_message.html", thread_id=thread_id)
+
+@app.route("/create_message/<int:thread_id>", methods=["POST"])
+def create_message(thread_id):
+    message = request.form["message"]
+    if not messages.create_message(thread_id, message):
+        return render_template("new_message.html", error="Viestin lähetys ei onnistunut")
+    return redirect(f"/get_messages/{thread_id}")

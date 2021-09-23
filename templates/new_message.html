@@ -4,10 +4,19 @@
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <p><a href="/log_out">Kirjaudu ulos</a></p>
 <hr>
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
 
 
-
-
+<form action="/create_message/{{ thread_id }}" method="POST">
+Viesti:
+<br>
+<textarea name="message" rows="10" cols="100"></textarea>
+<br>
+<input type="submit" value="Lähetä viesti">
+<input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+</form>
 
 {% else %}
 

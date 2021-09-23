@@ -4,21 +4,21 @@
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <p><a href="/log_out">Kirjaudu ulos</a></p>
 <hr>
-{% if thread_list %}
-<h1>Viestiketjut:</h1>
+
+<p><a href="/new_message/{{ thread_id }}">Kirjoita viesti</a></p>
+<hr>
+<h1>Viestit:</h1>
 <hr>
 
-<p><a href="/new_thread/{{ topic_id }}">Luo viestiketju</a></p>
-<hr>
+{% if messages %}
 
-{% for thread in thread_list %}
-<p><a href="/get_messages/{{ thread[1] }}">{{ thread[0] }}</a></p>
+{% for message in messages %}
+<p>{{ message[0] }}</p>
 {% endfor %}
 
 {% else %}
 
-<p><a href="/new_thread/{{ topic_id }}">Luo viestiketju</a></p>
-<hr>
+<p>Ei yhtään viestejä</p>
 
 {% endif %}
 
