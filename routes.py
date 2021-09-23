@@ -61,5 +61,19 @@ def create_topic():
     else:
         return render_template("new_topic.html", message="Aiheen pituus pitää olla 1-200")
 
+@app.route("/threads/<int:topic_id>")
+def threads(topic_id):
+    return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id)
 
-    
+@app.route("/new_thread/<int:topic_id>")
+def new_thread(topic_id):
+    return render_template("new_thread.html", topic_id=topic_id)
+
+@app.route("/create_thread/<int:topic_id>", methods=["POST"])
+def create_thread(topic_id):
+    user.csrf(request.form["csrf_token"])
+    thread_topic = request.form["thread_topic"]
+
+    if not thread.add_thread(topic_id, thread_topic):
+        return render_template("new_thread.html", topic_id=topic_id, message = "Viestiketjun lisääminen ei onnistunut")
+    return redirect(f"/threads/{topic_id}")

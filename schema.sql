@@ -14,7 +14,8 @@ CREATE TABLE topic (
 
 CREATE TABLE thread (
     id SERIAL PRIMARY KEY,
-    topic_id INTEGER REFERENCES topic, 
+    topic_id INTEGER REFERENCES topic,
+    thread_title TEXT, 
     created_at TIMESTAMP,
     owner_id INTEGER REFERENCES users 
 );

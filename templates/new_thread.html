@@ -1,0 +1,26 @@
+{% if session.username %}
+<h1>Keskustelusovellus</h1>
+<hr>
+<p>Olet kirjautunut nimellä {{ session.username }}</p>
+<p><a href="/log_out">Kirjaudu ulos</a></p>
+<hr>
+
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+
+<form action="/create_thread/{{ topic_id }}" method="POST">
+Aihe:
+<br>
+<textarea name="thread_topic" rows="5" cols="50"></textarea>
+<br>
+<input type="submit" value="Luo uusi viestiketju">
+<input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+</form>
+
+{% else %}
+
+<p>Et Ole kirjautunut</p>
+<p><a href="/login">Kirjaudu sisään</a></p>
+
+{% endif %}

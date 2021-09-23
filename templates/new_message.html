@@ -4,18 +4,9 @@
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <p><a href="/log_out">Kirjaudu ulos</a></p>
 <hr>
-<p><a href="/new_topic">Luo aihe</a></p>
-<hr>
-{% if topics %}
-<h1>Aiheet:</h1>
-{% for topic in topics %}
-<p><a href="/threads/{{ topic[1] }}">{{ topic[0] }}</a></p>
-{% endfor %}
 
-{% else %}
-<!-- Ei aiheita -->
-<p>Ei yhtään aihetta</p>
-{% endif %}
+
+
 
 
 {% else %}

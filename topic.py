@@ -1,7 +1,7 @@
 from db import db
 
 def get_all():
-    sql = "SELECT title FROM topic"
+    sql = "SELECT title, id FROM topic"
     return db.session.execute(sql).fetchall()
 
 def create(title):
