@@ -80,7 +80,7 @@ def create_thread(topic_id):
 
 @app.route("/get_messages/<int:thread_id>")
 def get_messages(thread_id):
-    return render_template("messages.html", messages=messages.get_messages(thread_id), thread_id=thread_id)
+    return render_template("messages.html", messages=messages.get_messages(thread_id), thread_id=thread_id, thread_title= thread.get_title(thread_id))
 
 @app.route("/new_message/<int:thread_id>")
 def new_message(thread_id):
@@ -88,7 +88,26 @@ def new_message(thread_id):
 
 @app.route("/create_message/<int:thread_id>", methods=["POST"])
 def create_message(thread_id):
+    user.csrf(request.form["csrf_token"])
     message = request.form["message"]
     if not messages.create_message(thread_id, message):
         return render_template("new_message.html", error="Viestin lähetys ei onnistunut")
     return redirect(f"/get_messages/{thread_id}")
+
+@app.route("/edit_thread_title/<int:thread_id>")
+def edit_thread_title(thread_id):
+    return render_template("edit_thread.html", message="Anna uusi otsikko", thread_id= thread_id)
+
+@app.route("/update_thread_title/<int:thread_id>", methods=["POST"])
+def update_thread_title(thread_id):
+    user.csrf(request.form["csrf_token"])
+    new_title = request.form["thread_title"]
+    if not thread.update_title(thread_id, new_title):
+        return render_template("edit_thread.html", message="Otsikon muuttaminen epäonnistui", thread_id= thread_id)
+    topic_id = thread.get_topic_id(new_title)
+    return redirect(f"/threads/{topic_id}")
+
+@app.route("/delete_thread/<int:thread_id>")
+def delete_thread(thread_id):
+    thread.delete(thread_id)
+    return redirect("/")

@@ -2,8 +2,12 @@ from db import db
 from flask import session
 
 def get_threads(topic_id):
-    sql = "SELECT thread_title, id FROM thread WHERE thread.topic_id = :topic_id"
+    sql = "SELECT thread_title, id, owner_id FROM thread WHERE thread.topic_id = :topic_id"
     return db.session.execute(sql, {"topic_id":topic_id}).fetchall()
+
+def get_title(thread_id):
+    sql = "SELECT thread_title FROM thread WHERE id=:id"
+    return db.session.execute(sql, {"id":thread_id}).fetchone()
 
 def add_thread(topic_id, thread_title):
     try:
@@ -13,3 +17,21 @@ def add_thread(topic_id, thread_title):
     except:
         return False
     return True
+
+def update_title(id, new_title):
+    try:
+        sql = "UPDATE thread SET thread_title=:new_title WHERE id=:id"
+        db.session.execute(sql, {"new_title":new_title, "id":id})
+        db.session.commit()
+    except:
+        return False
+    return True
+
+def get_topic_id(thread_title):
+    sql = "SELECT topic_id FROM thread WHERE thread_title=:thread_title"
+    return db.session.execute(sql, {"thread_title":thread_title}).fetchone()[0]
+
+def delete(thread_id):
+    sql = "DELETE FROM thread WHERE id=:id"
+    db.session.execute(sql, {"id":thread_id})
+    db.session.commit()

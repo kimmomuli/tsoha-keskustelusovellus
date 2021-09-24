@@ -1,7 +1,7 @@
 from db import db
 
 def get_all():
-    sql = "SELECT title, id FROM topic"
+    sql = "SELECT topic.title, topic.id, COUNT(thread.id), COUNT(messages.id) FROM topic LEFT JOIN thread ON thread.topic_id = topic.id LEFT JOIN messages ON messages.thread_id = thread.id GROUP BY topic.id;"
     return db.session.execute(sql).fetchall()
 
 def create(title):

@@ -9,13 +9,13 @@
 <p>{{ message }}</p>
 {% endif %}
 
-<form action="/create_thread/{{ topic_id }}" method="POST">
-Aihe:
+<form action="/update_thread_title/{{ thread_id }}" method="POST">
+Uusi otsikko:
 <br>
-<textarea name="thread_topic" rows="5" cols="50"></textarea>
+<textarea name="thread_title" rows="5" cols="50"></textarea>
 <br>
-<input type="submit" value="Luo uusi viestiketju">
-<input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+<input type="submit" value="Muokkaa otsikkoa">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 
 {% else %}

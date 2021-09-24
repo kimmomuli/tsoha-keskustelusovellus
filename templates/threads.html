@@ -1,5 +1,5 @@
 {% if session.username %}
-<h1>Keskustelusovellus</h1>
+<h1><a href="/">Keskustelusovellus</a></h1>
 <hr>
 <p>Olet kirjautunut nimellä {{ session.username }}</p>
 <p><a href="/log_out">Kirjaudu ulos</a></p>
@@ -13,6 +13,13 @@
 
 {% for thread in thread_list %}
 <p><a href="/get_messages/{{ thread[1] }}">{{ thread[0] }}</a></p>
+
+{% if session.user_id == thread[2] %}
+<p><a href="/edit_thread_title/{{ thread[1] }}">Muokkaa otsikkoa</a></p>
+<p><a href="/delete_thread/{{ thread[1] }}">Poista viestiketju</a></p>
+{% endif %}
+
+<br>
 {% endfor %}
 
 {% else %}

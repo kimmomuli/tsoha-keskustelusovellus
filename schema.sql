@@ -8,7 +8,6 @@ CREATE TABLE users (
 
 CREATE TABLE topic (
     id SERIAL PRIMARY KEY,
-    created_at TIMESTAMP,
     title TEXT
 );
 
@@ -22,7 +21,7 @@ CREATE TABLE thread (
 
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
-    thread_id INTEGER REFERENCES thread,
+    thread_id INTEGER REFERENCES thread ON DELETE CASCADE,
     message TEXT
 );
 
