@@ -8,7 +8,7 @@ Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käytt
 - [x] Alueella käyttäjä voi luoda uuden viestiketjun. Viestiketjun luomiseen tarvitsee otsikon.
 - [x] Käyttäjä voi kirjoittaa uuden viestin valmiiseen viestiketjuun.
 - [x] Käyttäjä voi muokata oman viestiketjun otsikkoa.
-- [ ] Käyttäjä voi  poistaa luomansa viestiketjun.
+- [x] Käyttäjä voi  poistaa luomansa viestiketjun.
 - [ ] Käyttäjä voi hakea viestit hakutoiminnolla, johon annetaan hakusana.
 - [ ] Ylläpitäjä voi muokata kaikkia viestejä. Ylläpitäjä voi myös lisätä ja poistaa viestejä, viestiketjuja ja alueita.
 - [ ] Ylläpitäjä voi poistaa käyttäjän
