@@ -7,7 +7,7 @@ Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käytt
 - [ ] Sovelluksen etusivulla on lista alueista sekä jokaisen alueen ketjujen ja viestien määrä. Listalla on myös viimeksi lähetetyn viestin ajankohta.
 - [x] Alueella käyttäjä voi luoda uuden viestiketjun. Viestiketjun luomiseen tarvitsee otsikon.
 - [x] Käyttäjä voi kirjoittaa uuden viestin valmiiseen viestiketjuun.
-- [ ] Käyttäjä voi muokata oman viestiketjun otsikkoa ja aloitusviestiä.
+- [ ] Käyttäjä voi muokata oman viestiketjun otsikkoa.
 - [ ] Käyttäjä voi  poistaa luomansa viestiketjun.
 - [ ] Käyttäjä voi hakea viestit hakutoiminnolla, johon annetaan hakusana.
 - [ ] Ylläpitäjä voi muokata kaikkia viestejä. Ylläpitäjä voi myös lisätä ja poistaa viestejä, viestiketjuja ja alueita.
