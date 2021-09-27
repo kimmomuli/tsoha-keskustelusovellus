@@ -1,0 +1,25 @@
+.container {
+    background-color: dimgrey;
+    max-width: 25em;
+    max-height: 25em;
+    margin-top: 13em;
+    border-radius: .5em;
+}
+
+.box {
+    text-align: center;
+    color: white;
+}
+
+#box_header {
+    padding-top: 0.5em;
+}
+
+#new_user {
+    margin-bottom: 17px;
+}
+
+#error{
+    margin: 0;
+    top: 10px;
+}

@@ -1,14 +1,25 @@
-{% if message %}
-<p>
-{{ message }}
-</p>
-{% endif %}
+{% extends "login_layout.html" %}
+{% block title %}Kirjautuminen{% endblock %}
 
+{% block error %}
+{% if message %}
+<div id="error" class="alert alert-danger" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block header %}Kirjaudu sisään{% endblock %}
+
+{% block form %}
 <form action="/login" method="POST">
 <p>Tunnus:<br>
 <input type="text" name="username"></p>
 <p>Salasana:<br>
 <input type="password" name="password"></p>
-<input type="submit" value="Kirjaudu">
+<input type="submit" class="btn btn-primary" value="Kirjaudu">
 </form>
-<p><a href="/new_user">Luo käyttäkätunnus</a></p>
+<hr>
+<p><a href="/new_user" id="new_user" type="button" class="btn btn-primary">Luo käyttäkätunnus</a></p>
+{% endblock %}
