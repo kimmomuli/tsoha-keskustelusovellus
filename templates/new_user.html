@@ -1,17 +1,26 @@
-{% if message %}
-<p>
-{{ message }}
-</p>
-{% endif %}
+{% extends "login_layout.html" %}
+{% block title %}Rekisteröityminen{% endblock %}
 
+{% block error %}
+{% if message %}
+<div id="error" class="alert alert-danger" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block header %}Luo tunnus{% endblock %}
+
+{% block form %}
 <form action="/create" method="POST">
-<h2>Luo käyttäjätunnus</h2>
 <p>Tunnus:<br>
 <input type="text" name="username"></p>
-
 <p>Salasana:<br>
 <input type="password" name="password1"></p>
 <p>Salasana uudestaan:<br>
 <input type="password" name="password2"></p>
-<input type="submit" value="Luo tunnus">
+<input id="create_button" type="submit" class="btn btn-primary" value="Luo tunnus">
 </form>
+{% endblock %}
+

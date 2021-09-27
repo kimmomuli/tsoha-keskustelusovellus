@@ -31,3 +31,12 @@ def log_out():
 def csrf(csrf_token):
     if session["csrf_token"] != csrf_token:
         abort(403)
+
+def exist(username):
+    try:
+        sql = "SELECT username FROM users WHERE username=:username"
+        result = db.session.execute(sql, {"username":username})
+        user = result.fetchone()
+        return False
+    except:
+        return True

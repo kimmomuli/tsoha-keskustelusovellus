@@ -1,3 +1,7 @@
+body {
+    background-color: steelblue
+}
+
 .container {
     background-color: dimgrey;
     max-width: 25em;
@@ -22,4 +26,8 @@
 #error{
     margin: 0;
     top: 10px;
+}
+
+#create_button {
+    margin-bottom: 17px;
 }

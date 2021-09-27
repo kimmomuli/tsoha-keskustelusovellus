@@ -24,21 +24,25 @@ def login():
 def new_user():
     return render_template("new_user.html")
 
-@app.route("/create", methods=["POST", "GET"])
+@app.route("/create", methods=["POST"])
 def create():
-    if request.method == "GET":
-        return render_template("new_user.html")
-
     if request.method == "POST":
         username = request.form["username"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
-        if password1 != password2:
-            return render_template("new_user.html", message="Salasanat eivät ole samat")
-            
+        
+        if len(username) < 3 or 100 < len(username):
+             return render_template("new_user.html", message="Käyttäjätunnuksen pitää olla 3 - 100 merkkiä")
+        elif password1 != password2:
+             return render_template("new_user.html", message="Salasanat eivät ole samat")
+        elif len(password1) < 10 or 1000 < len(password1):
+                 return render_template("new_user.html", message="Salasanan pitää olla 10 - 1000 merkkiä")
+
         if user.create(username, password1):
             return redirect("/")
         else:
+            if user.exist(username):
+                return render_template("new_user.html", message="Käyttäjätunnus on varattu")
             return render_template("new_user.html", message="Tilin luonti ei onnistunut")
 
 @app.route("/log_out")

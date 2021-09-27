@@ -1,0 +1,36 @@
+body {
+    background-color: steelblue
+}
+
+.container {
+    background-color: skyblue;
+    padding-bottom: 2px;
+}
+
+.jumbotron {
+    margin-top: 12em;
+}
+
+#username {
+    font-size: large;
+    margin-right: 15px;
+}
+
+a.btn.btn-primary.nav-link {
+    color: black;
+}
+
+.navbar brand {
+    font-size: xx-large;
+}
+
+#title {
+    text-align: center;
+    font-size: 7em;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#new_topic {
+    bottom: 20px;
+}

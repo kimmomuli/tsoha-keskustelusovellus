@@ -1,29 +1,62 @@
+{% extends "home_layout.html" %}
+<!-- Kirjautunut -->
+{% block logged_in %}
 {% if session.username %}
-<h1><a href="/">Keskustelusovellus</a></h1>
-<hr>
-<p>Olet kirjautunut nimellä {{ session.username }}</p>
-<p><a href="/log_out">Kirjaudu ulos</a></p>
-<hr>
-<p><a href="/new_topic">Luo aihe</a></p>
-<hr>
+
+<nav class="navbar navbar-expand-sm navbar-light">
+    <a class="navbar-brand" href="/">Keskustelusovellus</a>
+    <span id="username" class="navbar-test ml-auto">Olet kirjautunut tunnuksella {{ session.username }}</span>
+    <ul class="nav navbar-nav">
+        <li class="nav-item"><a class="btn btn-primary nav-link" href="/log_out">Kirjaudu ulos</a></li>
+    </ul>
+</nav>
+
 {% if topics %}
-<h1>Aiheet:</h1>
+<h1 id="title">Aiheet</h1>
+
 {% for topic in topics %}
-<p><a href="/threads/{{ topic[1] }}">{{ topic[0] }}</a></p>
-<p>{{ topic[2] }} Viestiketjua</p>
-<p>{{ topic[3] }} Viestiä</p>
-<br>
-{% endfor %}
 
+<ul class="list-unstyled">
+<li class="media">
+    <div class="media-body">
+    <h4 class="mt-0 mb-1"><a href="/threads/{{ topic[1] }}">{{ topic[0] }}</a></h4>
+    {{ topic[2] }} Viestiketjua
+    <br>
+    {{ topic[3] }} Viestiä
+    </div>
+</li>
+<hr>
+</ul>
+
+{% endfor %} 
 {% else %}
-<!-- Ei aiheita -->
-<p>Ei yhtään aihetta</p>
+<!-- Ei yhtään aihetta -->
+
+<ul class="list-unstyled">
+    <li class="media">
+        <div class="media-body">
+        <h5 class="mt-0 mb-1">Ei yhtään aihetta</h5>
+    </li>
+    <hr>
+</ul>
 {% endif %}
 
-
-{% else %}
-
-<p>Et Ole kirjautunut</p>
-<p><a href="/login">Kirjaudu sisään</a></p>
+<p><a id="new_topic" class="btn btn-primary btn-lg btn-block" href="/new_topic">Luo aihe</a></p>
 
 {% endif %}
+{% endblock %}
+
+<!-- Ei kirjautunut -->
+{% block not_in %}
+{% if not session.username %}
+
+<div class="jumbotron">
+<h1 class="display-4">Keskustelusovellus</h1>
+<p class="lead">Tervetuloa käyttämään keskustelusovellusta. Sovelluksella voit keskustella eri aiheista tai voit luoda omia aiheita ja viestiketjuja.</p>
+<hr class="my-4">
+<p>Kirjaudu sisään tai luo tunnus päästäksesi käyttämään sovellusta.</p>
+<a class="btn btn-primary btn-lg" href="/login" role="button">Kirjaudu sisään</a>
+<a class="btn btn-primary btn-lg" href="/new_user" role="button">Luo tunnus</a>
+</div>
+{% endif %}
+{% endblock %}
