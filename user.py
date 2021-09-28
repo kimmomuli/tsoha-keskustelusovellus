@@ -4,13 +4,15 @@ from db import db
 import secrets
 
 def login(username, password):
-    sql = "SELECT password, id FROM users WHERE username=:username AND visible = 1"
+    sql = "SELECT password, id, admin FROM users WHERE username=:username AND visible = 1"
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if user:
         if check_password_hash(user[0], password):
             session["username"] = username
             session["user_id"] = user[1]
+            if user[2] == 1:
+                session["admin"] = True
             session["csrf_token"] = secrets.token_hex(16)
             return True
     return False
@@ -33,10 +35,16 @@ def csrf(csrf_token):
         abort(403)
 
 def exist(username):
-    try:
-        sql = "SELECT username FROM users WHERE username=:username"
-        result = db.session.execute(sql, {"username":username})
-        user = result.fetchone()
-        return False
-    except:
+    sql = "SELECT COUNT(*) FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username":username}).fetchone()
+    if result[0] == 1:
         return True
+    return False
+
+
+def is_admin(username):
+    sql = "SELECT COUNT(*) FROM users WHERE username=:username AND admin=1"
+    result = db.session.execute(sql, {"username":username}).fetchone()
+    if result[0] == 1:
+        return True
+    return False

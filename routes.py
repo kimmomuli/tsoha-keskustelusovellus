@@ -9,20 +9,28 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "GET":
-        return render_template("login.html")
+    try:
+        username = session["username"]
+        return redirect("/")
+    except:
+        if request.method == "GET":
+            return render_template("login.html")
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        if user.login(username,password):
-            return redirect("/")
-        else:
-            return render_template("login.html", message="Väärä käyttäjätunnus tai salasana")
+        if request.method == "POST":
+            username = request.form["username"]
+            password = request.form["password"]
+            if user.login(username,password):
+                return redirect("/")
+            else:
+                return render_template("login.html", message="Väärä käyttäjätunnus tai salasana")
 
 @app.route("/new_user")
 def new_user():
-    return render_template("new_user.html")
+    try:
+        username = session["username"]
+        return redirect("/")
+    except:
+        return render_template("new_user.html")
 
 @app.route("/create", methods=["POST"])
 def create():
@@ -31,12 +39,12 @@ def create():
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         
-        if len(username) < 3 or 100 < len(username):
-             return render_template("new_user.html", message="Käyttäjätunnuksen pitää olla 3 - 100 merkkiä")
+        if len(username) < 3 or 30 < len(username):
+             return render_template("new_user.html", message="Käyttäjätunnuksen pitää olla 3 - 30 merkkiä")
         elif password1 != password2:
              return render_template("new_user.html", message="Salasanat eivät ole samat")
-        elif len(password1) < 10 or 1000 < len(password1):
-                 return render_template("new_user.html", message="Salasanan pitää olla 10 - 1000 merkkiä")
+        elif len(password1) < 10 or 100 < len(password1):
+                 return render_template("new_user.html", message="Salasanan pitää olla 10 - 100 merkkiä")
 
         if user.create(username, password1):
             return redirect("/")
@@ -58,12 +66,12 @@ def new_topic():
 def create_topic():
     user.csrf(request.form["csrf_token"])
     title = request.form["topic"]
-    if 2 < len(title) or len(title) > 200:
-        if topic.create(title):
-            return redirect("/")
-        return render_template("new_topic.html", message="Aiheen luonnissa tapahtui virhe")
-    else:
-        return render_template("new_topic.html", message="Aiheen pituus pitää olla 2-200")
+    if 1 > len(title) or len(title) > 100:
+        return render_template("new_topic.html", message="Aiheen pituus pitää olla 1-100")
+    
+    if topic.create(title):
+        return redirect("/")
+    return render_template("new_topic.html", message="Aiheen luonnissa tapahtui virhe")
 
 @app.route("/threads/<int:topic_id>")
 def threads(topic_id):
@@ -77,6 +85,9 @@ def new_thread(topic_id):
 def create_thread(topic_id):
     user.csrf(request.form["csrf_token"])
     thread_topic = request.form["thread_topic"]
+
+    if len(thread_topic) < 1 or len(thread_topic) > 100:
+        return render_template("new_thread.html", topic_id=topic_id, message="Ketjun pituus pitää olla 1 - 100 merkkiä")
 
     if not thread.add_thread(topic_id, thread_topic):
         return render_template("new_thread.html", topic_id=topic_id, message = "Viestiketjun lisääminen ei onnistunut")
@@ -94,6 +105,10 @@ def new_message(thread_id):
 def create_message(thread_id):
     user.csrf(request.form["csrf_token"])
     message = request.form["message"]
+
+    if len(message) < 1 or len(message) > 500:
+        return render_template("new_message.html", thread_id=thread_id, error="Viestin pituus pitää olla 1 - 500 merkkiä")
+
     if not messages.create_message(thread_id, message):
         return render_template("new_message.html", error="Viestin lähetys ei onnistunut")
     return redirect(f"/get_messages/{thread_id}")
@@ -106,6 +121,10 @@ def edit_thread_title(thread_id):
 def update_thread_title(thread_id):
     user.csrf(request.form["csrf_token"])
     new_title = request.form["thread_title"]
+
+    if 1 > len(new_title) or len(new_title) < 100:
+        return render_template("edit_thread.html", thread_id= thread_id, message="Aiheen pituus pitää olla 1-100")
+
     if not thread.update_title(thread_id, new_title):
         return render_template("edit_thread.html", message="Otsikon muuttaminen epäonnistui", thread_id= thread_id)
     topic_id = thread.get_topic_id(new_title)
@@ -113,5 +132,10 @@ def update_thread_title(thread_id):
 
 @app.route("/delete_thread/<int:thread_id>")
 def delete_thread(thread_id):
-    thread.delete(thread_id)
-    return redirect("/")
+    try:
+        user_id = session["user_id"]
+        thread.delete(thread_id, user_id)
+        return redirect("/")
+    except:
+        return redirect("/login")
+    

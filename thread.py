@@ -14,9 +14,9 @@ def add_thread(topic_id, thread_title):
         sql = "INSERT INTO thread (topic_id, thread_title, created_at, owner_id) VALUES (:topic_id, :thread_title, NOW(), :owner_id)"
         db.session.execute(sql, {"topic_id":topic_id, "thread_title":thread_title, "owner_id":session["user_id"]})
         db.session.commit()
+        return True
     except:
         return False
-    return True
 
 def update_title(id, new_title):
     try:
@@ -31,7 +31,7 @@ def get_topic_id(thread_title):
     sql = "SELECT topic_id FROM thread WHERE thread_title=:thread_title"
     return db.session.execute(sql, {"thread_title":thread_title}).fetchone()[0]
 
-def delete(thread_id):
-    sql = "DELETE FROM thread WHERE id=:id"
-    db.session.execute(sql, {"id":thread_id})
+def delete(thread_id, user_id):
+    sql = "DELETE FROM thread WHERE id=:id AND owner_id=:owner_id"
+    db.session.execute(sql, {"id":thread_id, "owner_id":user_id})
     db.session.commit()

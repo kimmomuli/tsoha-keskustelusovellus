@@ -21,7 +21,7 @@
 <form action="/create_thread/{{ topic_id }}" method="POST">
 Aihe:
 <br>
-<textarea id="topic_textarea" name="message" rows="5" cols="100"></textarea>
+<textarea id="topic_textarea" name="thread_topic" rows="5" cols="100"></textarea>
 <br>
 <input type="submit" class="btn btn-primary btn-lg btn-block" value="Luo uusi viestiketju">
 <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
