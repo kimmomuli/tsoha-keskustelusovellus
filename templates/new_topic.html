@@ -1,16 +1,32 @@
+{% extends "home_layout.html" %}
+{% block logged_in %}
 {% if session.username %}
-<h1><a href="/">Keskustelusovellus</a></h1>
-<hr>
+
+<nav class="navbar navbar-expand-sm navbar-light">
+    <a class="navbar-brand" href="/">Keskustelusovellus</a>
+    <span id="username" class="navbar-test ml-auto">Olet kirjautunut tunnuksella {{ session.username }}</span>
+    <ul class="nav navbar-nav">
+        <li class="nav-item"><a class="btn btn-primary nav-link" href="/log_out">Kirjaudu ulos</a></li>
+    </ul>
+</nav>
+
+<h1 id="title">Luo aihe</h1>
+
 {% if message %}
-<p>{{ message }}</p>
+<div id="error" class="alert alert-danger" role="alert">
+    {{ message }}
+</div>
 {% endif %}
 
+<div class="new_topic">
 <form action="/create_topic" method="POST">
-Aihe:
+Uusi aihe:
 <br>
-<textarea name="topic" rows="5" cols="50"></textarea>
+<textarea id="topic_textarea" name="topic" rows="3" cols="50"></textarea>
 <br>
-<input type="submit" value="Luo uusi Aihe">
+<input type="submit" class="btn btn-primary btn-lg btn-block" value="Luo uusi Aihe">
 <input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
 </form>
+</div>
 {% endif %}
+{% endblock %}

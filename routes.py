@@ -58,12 +58,12 @@ def new_topic():
 def create_topic():
     user.csrf(request.form["csrf_token"])
     title = request.form["topic"]
-    if 0 < len(title) < 200:
+    if 2 < len(title) or len(title) > 200:
         if topic.create(title):
             return redirect("/")
         return render_template("new_topic.html", message="Aiheen luonnissa tapahtui virhe")
     else:
-        return render_template("new_topic.html", message="Aiheen pituus pitää olla 1-200")
+        return render_template("new_topic.html", message="Aiheen pituus pitää olla 2-200")
 
 @app.route("/threads/<int:topic_id>")
 def threads(topic_id):
@@ -100,7 +100,7 @@ def create_message(thread_id):
 
 @app.route("/edit_thread_title/<int:thread_id>")
 def edit_thread_title(thread_id):
-    return render_template("edit_thread.html", message="Anna uusi otsikko", thread_id= thread_id)
+    return render_template("edit_thread.html", thread_id= thread_id)
 
 @app.route("/update_thread_title/<int:thread_id>", methods=["POST"])
 def update_thread_title(thread_id):

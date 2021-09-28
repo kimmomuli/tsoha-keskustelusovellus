@@ -4,7 +4,7 @@ body {
 
 .container {
     background-color: skyblue;
-    padding-bottom: 2px;
+    padding-bottom: 10px;
 }
 
 .jumbotron {
@@ -33,4 +33,16 @@ a.btn.btn-primary.nav-link {
 
 #new_topic {
     bottom: 20px;
+}
+
+.new_topic {
+    text-align: center;
+}
+
+#topic_textarea {
+    width: 100%;
+}
+
+#thread_title {
+    text-align: center;
 }
