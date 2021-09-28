@@ -1,0 +1,31 @@
+{% extends "home_layout.html" %}
+{% block logged_in %}
+{% if session.username %}
+
+<h1 id="title">Hakutulosket</h1>
+
+{% if error %}
+<div id="error" class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+{% if search_messages %}
+
+{% for message in search_messages %}
+
+<ul class="list-unstyled">
+<li class="media">
+    <div class="media-body">
+    <h4 class="mt-0 mb-1"><a href="/get_messages/{{ message[1] }}">{{ message[2] }}</a></h4>
+    </div>
+</li>
+<hr>
+</ul>
+
+{% endfor %} 
+
+
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -12,3 +12,8 @@ def create_message(thread_id, message):
     except:
         return False
     return True
+
+def search_messages(headword):
+    sql = "SELECT id, thread_id, message FROM messages WHERE message LIKE :headword"
+    result = db.session.execute(sql, {"headword":f"%{headword}%"})
+    return result.fetchall()

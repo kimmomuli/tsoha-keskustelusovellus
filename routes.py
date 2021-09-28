@@ -122,7 +122,7 @@ def update_thread_title(thread_id):
     user.csrf(request.form["csrf_token"])
     new_title = request.form["thread_title"]
 
-    if 1 > len(new_title) or len(new_title) < 100:
+    if 1 > len(new_title) or len(new_title) > 100:
         return render_template("edit_thread.html", thread_id= thread_id, message="Aiheen pituus pitää olla 1-100")
 
     if not thread.update_title(thread_id, new_title):
@@ -139,3 +139,12 @@ def delete_thread(thread_id):
     except:
         return redirect("/login")
     
+@app.route("/result", methods=["GET"])
+def result():
+    try:
+        username = session["username"]
+        headword = request.args["query"]
+        results = messages.search_messages(headword)
+        return render_template("search_result.html", search_messages=results)
+    except:
+        return redirect("/")

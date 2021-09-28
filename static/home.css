@@ -2,6 +2,10 @@ body {
     background-color: steelblue
 }
 
+.navbar-brand {
+    font-size: xx-large;
+}
+
 .container {
     background-color: skyblue;
     padding-bottom: 10px;
@@ -17,7 +21,7 @@ body {
 }
 
 a.btn.btn-primary.nav-link {
-    color: black;
+    color: white;
 }
 
 .navbar brand {
