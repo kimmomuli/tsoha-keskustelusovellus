@@ -91,7 +91,39 @@
 </ul>
 {% endif %}
 
+<!-- Rajatut alueet -->
+<h1 id="title">Rajatut aiheet</h1>
+<p><a class="btn btn-primary btn-lg btn-block" href="/new_limited_topic">Luo rajattu alue</a></p>
+<hr>
+
+{% if limited_topics %}
+{% for topic in limited_topics %}
+<ul class="list-unstyled">
+<li class="media">
+    <div class="media-body">
+    <h4 class="mt-0 mb-1">{{ topic[0] }} <a class="btn btn-primary" href="/delete_topic/{{ topic[1] }}">Poista aihe</a>
+    <a class="btn btn-primary" href="/add_user_permissions/{{ topic[1] }}">Lisää oikeuksia</a>
+    </h4>
+    </div>
+</li>
+<hr>
+</ul>
+{% endfor %}
+{% else %}
+
+<ul class="list-unstyled">
+<li class="media">
+    <div class="media-body">
+    <h4 class="mt-0 mb-1">Ei rajattuja aiheita</h4>
+    </div>
+</li>
+<hr>
+</ul>
+
+{% endif %}
+
 <!-- Käyttäjät -->
+<h1 id="title">Käyttäjät</h1>
 
 {% if users %}
 
@@ -99,14 +131,16 @@
 <ul class="list-unstyled">
 <li class="media">
     <div class="media-body">
+    {% if user[1] != session.user_id %}
     {% if user[2] == 1 %}
     <h4 class="mt-0 mb-1">{{ user[0] }} <a class="btn btn-primary" href="/delete_user_admin/{{ user[1] }}">Poista käyttäjä</a></h4>
     {% else %}
     <h4 class="mt-0 mb-1">{{ user[0] }} <a class="btn btn-primary" href="/return_user_admin/{{ user[1] }}">Palauta käyttäjä</a></h4>
     {% endif %}
+    <hr>
+    {% endif %}
     </div>
 </li>
-<hr>
 </ul>
 
 {% endfor %}

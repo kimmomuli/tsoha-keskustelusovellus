@@ -1,0 +1,38 @@
+{% extends "home_layout.html" %}
+{% block logged_in %}
+{% if session.admin %}
+
+<h1 id="title"><a href="/admin">Pääkäyttäjän toiminnot</a></h1>
+<hr>
+{% if error %}
+<div id="error" class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+{% if users %}
+{% for user in users %}
+<ul class="list-unstyled">
+<li class="media">
+    <div class="media-body">
+    {% if user[1] != session.user_id %}
+    {% if user[2] %}
+
+    <h4 class="mt-0 mb-1">{{ user[0] }} <a class="btn btn-primary" href="/remove_topic_permission/{{ user[1] }}/{{ topic_id }}">Poista käyttäjä alueelta</a></h4>
+    
+    {% else %}
+    
+    <h4 class="mt-0 mb-1">{{ user[0] }} <a class="btn btn-primary" href="/add_topic_permission/{{ user[1] }}/{{ topic_id }}">Lisää käyttäjä alueelle</a></h4>
+    
+    {% endif %}
+    <hr>
+    {% endif %}
+    </div>
+</li>
+</ul>
+
+{% endfor %}
+{% endif %}
+
+{% endif %}
+{% endblock %}

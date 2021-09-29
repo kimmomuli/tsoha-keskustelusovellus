@@ -1,6 +1,6 @@
 from app import app
 from flask import Flask, redirect, render_template, session, request
-import user, thread, topic, messages
+import user, thread, topic, messages, limits
 from werkzeug.exceptions import abort
 
 @app.route("/")
@@ -148,14 +148,23 @@ def result():
     except:
         return redirect("/")
 
+def is_admin():
+    try:
+        if user.is_admin(session["username"]):
+            return True
+    except:
+        return False
+    return True
+
 @app.route("/admin")
 def admin():
-    if user.is_admin(session["username"]):
+    if is_admin():
         topics = topic.get_all()
         threads =  thread.get_all()
         all_messages = messages.get_all()
         users = user.get_all_users()
-        return render_template("admin.html", topics=topics, thread_list=threads, messages=all_messages, users=users)
+        limited_topics = topic.get_limited_topics()
+        return render_template("admin.html", topics=topics, thread_list=threads, messages=all_messages, users=users, limited_topics = limited_topics)
     return redirect("/")
 
 @app.route("/delete_topic/<int:topic_id>")
@@ -176,36 +185,70 @@ def delete_message(message_id):
 
 @app.route("/delete_thread_admin/<int:thread_id>")
 def delete_thread_admin(thread_id):
-    try:
-        if user.is_admin(session["username"]):
-            thread.delete_admin(thread_id)
-            return redirect("/admin")
-    except:
-        return redirect("/login")
+    if is_admin():
+        thread.delete_admin(thread_id)
+        return redirect("/admin")
+    return redirect("/login")
 
 @app.route("/delete_message_admin/<int:message_id>")
 def delete_message_admin(message_id):
-    try:
-        if user.is_admin(session["username"]):
-            messages.delete_admin(message_id)
-            return redirect("/admin")
-    except:
-        return redirect("/login")
+    if is_admin():
+        messages.delete_admin(message_id)
+        return redirect("/admin")
+    return redirect("/login")
 
 @app.route("/delete_user_admin/<int:user_id>")
 def delete_user_admin(user_id):
-    try:
-        if user.is_admin(session["username"]):
-            user.delete(user_id)
-            return redirect("/admin")
-    except:
-        return redirect("/login")
+    if is_admin():
+        user.delete(user_id)
+        return redirect("/admin")
+    return redirect("/login")
 
 @app.route("/return_user_admin/<int:user_id>")
 def return_user_admin(user_id):
+    if is_admin():
+        user.return_user(user_id)
+        return redirect("/admin")
+    return redirect("/login")
+
+@app.route("/new_limited_topic")
+def new_limited_topic():
+    if is_admin():
+        return render_template("new_limited_topic.html")
+    return redirect("/login")
+
+@app.route("/create_limited_topic", methods=["POST"])
+def create_limited_topic():
+    user.csrf(request.form["csrf_token"])
     try:
         if user.is_admin(session["username"]):
-            user.return_user(user_id)
+            title = request.form["topic"]
+        if 1 > len(title) or len(title) > 100:
+            return render_template("new_topic.html", message="Aiheen pituus pitää olla 1-100")
+    
+        if topic.create_limited_topic(title):
             return redirect("/admin")
+        return render_template("new_limited_topic.html", message="Aiheen luonnissa tapahtui virhe")
     except:
         return redirect("/login")
+
+@app.route("/add_user_permissions/<int:topic_id>")
+def add_user_permissions(topic_id):
+    if is_admin():
+        users = limits.get_users()
+        return render_template("add_permissions.html", topic_id=topic_id, users=users)
+    return redirect("/login")
+
+@app.route("/remove_topic_permission/<int:user_id>/<int:topic_id>")
+def remove_topic_permission(user_id, topic_id):
+    if is_admin():
+        limits.remove_permission(user_id, topic_id)
+        return redirect(f"/add_user_permissions/{topic_id}")
+    return redirect("/login")
+
+@app.route("/add_topic_permission/<int:user_id>/<int:topic_id>")
+def add_topic_permission(user_id, topic_id):
+    if is_admin():
+        limits.add_pemission(user_id, topic_id)
+        return redirect(f"/add_user_permissions/{topic_id}")
+    return redirect("/login")

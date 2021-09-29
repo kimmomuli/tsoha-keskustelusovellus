@@ -9,7 +9,8 @@ CREATE TABLE users (
 CREATE TABLE topic (
     id SERIAL PRIMARY KEY,
     owner_id INTEGER REFERENCES users ON DELETE CASCADE,
-    title TEXT
+    title TEXT,
+    is_limited BOOLEAN
 );
 
 CREATE TABLE thread (
@@ -18,6 +19,12 @@ CREATE TABLE thread (
     thread_title TEXT, 
     created_at TIMESTAMP,
     owner_id INTEGER REFERENCES users ON DELETE CASCADE
+);
+
+CREATE TABLE limits (
+    id SERIAL PRIMARY KEY,
+    topic_id INTEGER REFERENCES topic ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 
 CREATE TABLE messages (

@@ -1,0 +1,24 @@
+{% extends "home_layout.html" %}
+{% block logged_in %}
+{% if session.admin %}
+
+<h1 id="title">Luo rajoitettu aihe</h1>
+
+{% if message %}
+<div id="error" class="alert alert-danger" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+
+<div class="new_topic">
+<form action="/create_limited_topic" method="POST">
+Uusi aihe:
+<br>
+<textarea id="topic_textarea" name="topic" rows="3" cols="50"></textarea>
+<br>
+<input type="submit" class="btn btn-primary btn-lg btn-block" value="Luo uusi rajoitettu Aihe">
+<input type="hidden" name="csrf_token" value="{{session.csrf_token}}">
+</form>
+</div>
+{% endif %}
+{% endblock %}
