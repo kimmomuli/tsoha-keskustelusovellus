@@ -3,6 +3,10 @@
 {% block logged_in %}
 {% if session.username %}
 
+{% if session.admin %}
+<p><a id="new_topic" class="btn btn-primary btn-lg btn-block" href="/admin">Pääkäyttäjä toiminnot</a></p>
+{% endif %}
+
 <h1 id="title">Aiheet</h1>
 
 {% if error %}

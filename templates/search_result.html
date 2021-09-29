@@ -2,7 +2,7 @@
 {% block logged_in %}
 {% if session.username %}
 
-<h1 id="title">Hakutulosket</h1>
+<h1 id="title">Hakutulokset</h1>
 
 {% if error %}
 <div id="error" class="alert alert-danger" role="alert">
@@ -24,6 +24,16 @@
 </ul>
 
 {% endfor %} 
+
+{% else %}
+
+<ul class="list-unstyled">
+    <li class="media">
+        <div class="media-body">
+            <h4 class="mt-0 mb-1">Ei hakutuloksia</h4>
+        </div>
+    </li>
+</ul>
 
 
 {% endif %}

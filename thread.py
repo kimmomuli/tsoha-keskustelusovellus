@@ -35,3 +35,16 @@ def delete(thread_id, user_id):
     sql = "DELETE FROM thread WHERE id=:id AND owner_id=:owner_id"
     db.session.execute(sql, {"id":thread_id, "owner_id":user_id})
     db.session.commit()
+
+def get_topic_id(thread_id):
+    sql = "SELECT topic_id FROM thread WHERE id=:thread_id"
+    return db.session.execute(sql, {"thread_id":thread_id}).fetchone()[0]
+
+def get_all():
+    sql = "SELECT thread_title, id, owner_id FROM thread"
+    return db.session.execute(sql).fetchall()
+
+def delete_admin(thread_id):
+    sql = "DELETE FROM thread WHERE id=:id"
+    db.session.execute(sql, {"id":thread_id})
+    db.session.commit()

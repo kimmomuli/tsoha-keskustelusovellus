@@ -45,13 +45,12 @@ def create():
              return render_template("new_user.html", message="Salasanat eivät ole samat")
         elif len(password1) < 10 or 100 < len(password1):
                  return render_template("new_user.html", message="Salasanan pitää olla 10 - 100 merkkiä")
+        elif user.exist(username):
+            return render_template("new_user.html", message="Käyttäjätunnus on varattu")
 
         if user.create(username, password1):
             return redirect("/")
-        else:
-            if user.exist(username):
-                return render_template("new_user.html", message="Käyttäjätunnus on varattu")
-            return render_template("new_user.html", message="Tilin luonti ei onnistunut")
+        return render_template("new_user.html", message="Tilin luonti ei onnistunut")
 
 @app.route("/log_out")
 def log_out():
@@ -75,7 +74,7 @@ def create_topic():
 
 @app.route("/threads/<int:topic_id>")
 def threads(topic_id):
-    return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id)
+    return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id, topic_title=topic.get_title(topic_id))
 
 @app.route("/new_thread/<int:topic_id>")
 def new_thread(topic_id):
@@ -95,7 +94,7 @@ def create_thread(topic_id):
 
 @app.route("/get_messages/<int:thread_id>")
 def get_messages(thread_id):
-    return render_template("messages.html", messages=messages.get_messages(thread_id), thread_id=thread_id, thread_title= thread.get_title(thread_id))
+    return render_template("messages.html", messages=messages.get_messages(thread_id), thread_id=thread_id, thread_title=thread.get_title(thread_id), topic_id=thread.get_topic_id(thread_id))
 
 @app.route("/new_message/<int:thread_id>")
 def new_message(thread_id):
@@ -115,7 +114,7 @@ def create_message(thread_id):
 
 @app.route("/edit_thread_title/<int:thread_id>")
 def edit_thread_title(thread_id):
-    return render_template("edit_thread.html", thread_id= thread_id)
+    return render_template("edit_thread.html", thread_id=thread_id)
 
 @app.route("/update_thread_title/<int:thread_id>", methods=["POST"])
 def update_thread_title(thread_id):
@@ -127,7 +126,7 @@ def update_thread_title(thread_id):
 
     if not thread.update_title(thread_id, new_title):
         return render_template("edit_thread.html", message="Otsikon muuttaminen epäonnistui", thread_id= thread_id)
-    topic_id = thread.get_topic_id(new_title)
+    topic_id = thread.get_topic_id(thread_id)
     return redirect(f"/threads/{topic_id}")
 
 @app.route("/delete_thread/<int:thread_id>")
@@ -148,3 +147,65 @@ def result():
         return render_template("search_result.html", search_messages=results)
     except:
         return redirect("/")
+
+@app.route("/admin")
+def admin():
+    if user.is_admin(session["username"]):
+        topics = topic.get_all()
+        threads =  thread.get_all()
+        all_messages = messages.get_all()
+        users = user.get_all_users()
+        return render_template("admin.html", topics=topics, thread_list=threads, messages=all_messages, users=users)
+    return redirect("/")
+
+@app.route("/delete_topic/<int:topic_id>")
+def delete_topic(topic_id):
+    if user.is_admin(session["username"]):
+        topic.delete(topic_id)
+        return redirect("/admin")
+    return redirect("/")
+    
+@app.route("/delete_message/<int:message_id>")
+def delete_message(message_id):
+    try:
+        user_id = session["user_id"]
+        messages.delete(message_id)
+        return redirect("/")
+    except:
+        return redirect("/login")
+
+@app.route("/delete_thread_admin/<int:thread_id>")
+def delete_thread_admin(thread_id):
+    try:
+        if user.is_admin(session["username"]):
+            thread.delete_admin(thread_id)
+            return redirect("/admin")
+    except:
+        return redirect("/login")
+
+@app.route("/delete_message_admin/<int:message_id>")
+def delete_message_admin(message_id):
+    try:
+        if user.is_admin(session["username"]):
+            messages.delete_admin(message_id)
+            return redirect("/admin")
+    except:
+        return redirect("/login")
+
+@app.route("/delete_user_admin/<int:user_id>")
+def delete_user_admin(user_id):
+    try:
+        if user.is_admin(session["username"]):
+            user.delete(user_id)
+            return redirect("/admin")
+    except:
+        return redirect("/login")
+
+@app.route("/return_user_admin/<int:user_id>")
+def return_user_admin(user_id):
+    try:
+        if user.is_admin(session["username"]):
+            user.return_user(user_id)
+            return redirect("/admin")
+    except:
+        return redirect("/login")

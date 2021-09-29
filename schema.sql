@@ -8,20 +8,22 @@ CREATE TABLE users (
 
 CREATE TABLE topic (
     id SERIAL PRIMARY KEY,
+    owner_id INTEGER REFERENCES users ON DELETE CASCADE,
     title TEXT
 );
 
 CREATE TABLE thread (
     id SERIAL PRIMARY KEY,
-    topic_id INTEGER REFERENCES topic,
+    topic_id INTEGER REFERENCES topic ON DELETE CASCADE,
     thread_title TEXT, 
     created_at TIMESTAMP,
-    owner_id INTEGER REFERENCES users 
+    owner_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
     thread_id INTEGER REFERENCES thread ON DELETE CASCADE,
-    message TEXT
+    message TEXT,
+    owner_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 

@@ -2,16 +2,15 @@
 {% block logged_in %}
 {% if session.username %}
 
-<h1 id="title">Viestiketjun viestit</h1>
+<h1 id="title"><a href="/threads/{{ topic_id }}">{{ thread_title[0] }}</a></h1>
 
 {% if messages %}
-<h1 id="thread_title">{{ thread_title[0] }}</h1>
 
 {% for message in messages %}
 <ul class="list-unstyled">
 <li class="media">
     <div class="media-body">
-    <h4 class="mt-0 mb-1">{{ message[0] }}</a></h4>
+    <h4 class="mt-0 mb-1">{{ message[0] }} {% if message[2] == session.user_id %}<a class="btn btn-primary" href="/delete_message/{{ message[1] }}">Poista viesti</a>{% endif %}</h4>
     </div>
 </li>
 <hr>

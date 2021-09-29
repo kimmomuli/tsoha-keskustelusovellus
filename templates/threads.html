@@ -2,7 +2,7 @@
 {% block logged_in %}
 {% if session.username %}
 
-<h1 id="title">Viestiketjut</h1>
+<h1 id="title"><a href="/">{{ topic_title }}</a></h1>
 
 {% if thread_list %}
 
@@ -24,6 +24,17 @@
 
 <br>
 {% endfor %}
+
+{% else %}
+
+<ul class="list-unstyled">
+    <li class="media">
+        <div class="media-body">
+        <h4 class="mt-0 mb-1">Ei yhtään viestiketjua</h4>
+        </div>
+    </li>
+<hr>
+</ul>
 
 {% endif %}
 

@@ -11,8 +11,10 @@ def login(username, password):
         if check_password_hash(user[0], password):
             session["username"] = username
             session["user_id"] = user[1]
+
             if user[2] == 1:
                 session["admin"] = True
+
             session["csrf_token"] = secrets.token_hex(16)
             return True
     return False
@@ -35,16 +37,27 @@ def csrf(csrf_token):
         abort(403)
 
 def exist(username):
-    sql = "SELECT COUNT(*) FROM users WHERE username=:username"
+    sql = "SELECT username FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username":username}).fetchone()
-    if result[0] == 1:
-        return True
-    return False
-
+    return result is not None
 
 def is_admin(username):
-    sql = "SELECT COUNT(*) FROM users WHERE username=:username AND admin=1"
+    sql = "SELECT admin FROM users WHERE username=:username AND visible=1"
     result = db.session.execute(sql, {"username":username}).fetchone()
-    if result[0] == 1:
-        return True
-    return False
+    if result is None:
+        return False
+    return result[0] == 1
+
+def get_all_users():
+    sql = "SELECT username, id, visible FROM users" 
+    return db.session.execute(sql).fetchall()
+
+def delete(id):
+    sql = "UPDATE users SET visible=0 WHERE id=:id"
+    db.session.execute(sql, {"id":id})
+    db.session.commit()
+
+def return_user(id):
+    sql = "UPDATE users SET visible=1 WHERE id=:id"
+    db.session.execute(sql, {"id":id})
+    db.session.commit()
