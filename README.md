@@ -10,8 +10,8 @@ Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käytt
 - [x] Käyttäjä voi muokata oman viestiketjun otsikkoa.
 - [x] Käyttäjä voi  poistaa luomansa viestiketjun.
 - [x] Käyttäjä voi hakea viestit hakutoiminnolla, johon annetaan hakusana.
-- [ ] Ylläpitäjä voi muokata kaikkia viestejä. Ylläpitäjä voi myös lisätä ja poistaa viestejä, viestiketjuja ja alueita.
-- [ ] Ylläpitäjä voi poistaa käyttäjän
+- [x] Ylläpitäjä voi muokata kaikkia viestejä. Ylläpitäjä voi myös lisätä ja poistaa viestejä, viestiketjuja ja alueita.
+- [x] Ylläpitäjä voi poistaa käyttäjän
 - [ ] Ylläpitäjä voi luoda rajoitetun alueen ja määrittää kellä on pääsy rajoitetulle alueelle.
 
 Linkki [Herokuun](https://tsoha-keskustelusovellus.herokuapp.com/)
