@@ -11,7 +11,6 @@ def index():
     except:
         return render_template("index.html", topics = topic.get_all())
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     try:
@@ -81,42 +80,54 @@ def create_topic():
 def threads(topic_id):
     if not topic.is_topic_limited(topic_id):
         return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id, topic_title=topic.get_title(topic_id))
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
     return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id, topic_title=topic.get_limited_title(topic_id))
     
 
 @app.route("/new_thread/<int:topic_id>")
 def new_thread(topic_id):
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
     return render_template("new_thread.html", topic_id=topic_id)
 
 @app.route("/create_thread/<int:topic_id>", methods=["POST"])
 def create_thread(topic_id):
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
     user.csrf(request.form["csrf_token"])
     thread_topic = request.form["thread_topic"]
 
     if len(thread_topic) < 1 or len(thread_topic) > 100:
         return render_template("new_thread.html", topic_id=topic_id, message="Ketjun pituus pitää olla 1 - 100 merkkiä")
 
-    if topic.is_topic_limited(topic_id):
-        try:
-            if limits.have_permission(session["user_id"], topic_id):
-                return redirect(f"/get_limited_threads/{topic_id}")
-        except:
-            return("/login")
-
     if not thread.add_thread(topic_id, thread_topic):
         return render_template("new_thread.html", topic_id=topic_id, message = "Viestiketjun lisääminen ei onnistunut")
+    if topic.is_topic_limited(topic_id):
+        return redirect(f"/get_limited_threads/{topic_id}")
     return redirect(f"/threads/{topic_id}")
 
 @app.route("/get_messages/<int:thread_id>")
 def get_messages(thread_id):
-    return render_template("messages.html", messages=messages.get_messages(thread_id), thread_id=thread_id, thread_title=thread.get_title(thread_id), topic_id=thread.get_topic_id(thread_id))
+    topic_id = thread.get_topic_id(thread_id)
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
+    return render_template("messages.html", messages=messages.get_messages(thread_id), thread_id=thread_id, thread_title=thread.get_title(thread_id), topic_id=topic_id)
 
 @app.route("/new_message/<int:thread_id>")
 def new_message(thread_id):
-    return render_template("new_message.html", thread_id=thread_id)
+    topic_id = thread.get_topic_id(thread_id)
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
+    if not topic.is_topic_limited(topic_id):
+        return render_template("new_message.html", thread_id=thread_id)
+
 
 @app.route("/create_message/<int:thread_id>", methods=["POST"])
 def create_message(thread_id):
+    topic_id = thread.get_topic_id(thread_id)
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
     user.csrf(request.form["csrf_token"])
     message = request.form["message"]
 
@@ -130,16 +141,17 @@ def create_message(thread_id):
 @app.route("/edit_thread_title/<int:thread_id>")
 def edit_thread_title(thread_id):
     topic_id = thread.get_topic_id(thread_id)
-    if topic.is_topic_limited(topic_id):
-        try:
-            if limits.have_permission(session["user_id"], topic_id):
-                return render_template("edit_thread.html", thread_id=thread_id)
-        except:
-            return("/login")
-    return render_template("edit_thread.html", thread_id=thread_id)
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
+    if thread.is_my_thread(thread_id):
+        return render_template("edit_thread.html", thread_id=thread_id)
+    return("/")
 
 @app.route("/update_thread_title/<int:thread_id>", methods=["POST"])
 def update_thread_title(thread_id):
+    topic_id = thread.get_topic_id(thread_id)
+    if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+        return redirect("/")
     user.csrf(request.form["csrf_token"])
     new_title = request.form["thread_title"]
 
@@ -148,7 +160,6 @@ def update_thread_title(thread_id):
 
     if not thread.update_title(thread_id, new_title):
         return render_template("edit_thread.html", message="Otsikon muuttaminen epäonnistui", thread_id= thread_id)
-    topic_id = thread.get_topic_id(thread_id)
     return redirect(f"/threads/{topic_id}")
 
 @app.route("/delete_thread/<int:thread_id>")
@@ -156,10 +167,10 @@ def delete_thread(thread_id):
     try:
         user_id = session["user_id"]
         topic_id = thread.get_topic_id(thread_id)
-        if topic.is_topic_limited(topic_id):
-            if limits.have_permission(user_id, topic_id):
-                thread.delete(thread_id, user_id)
-                return redirect("/")
+
+        if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+            return redirect("/")
+
         thread.delete(thread_id, user_id)
         return redirect("/")
     except:
@@ -175,17 +186,9 @@ def result():
     except:
         return redirect("/")
 
-def is_admin():
-    try:
-        if user.is_admin(session["username"]):
-            return True
-    except:
-        return False
-    return True
-
 @app.route("/admin")
 def admin():
-    if is_admin():
+    if user.is_admin_in():
         topics = topic.get_all()
         threads =  thread.get_all()
         all_messages = messages.get_all()
@@ -196,7 +199,7 @@ def admin():
 
 @app.route("/delete_topic/<int:topic_id>")
 def delete_topic(topic_id):
-    if user.is_admin(session["username"]):
+    if user.is_admin_in():
         topic.delete(topic_id)
         return redirect("/admin")
     return redirect("/")
@@ -204,6 +207,12 @@ def delete_topic(topic_id):
 @app.route("/delete_message/<int:message_id>")
 def delete_message(message_id):
     try:
+        thread_id = messages.get_thread_id(message_id)
+        topic_id = thread.get_topic_id(thread_id)
+
+        if topic.is_topic_limited(topic_id) and not user.user_permission(topic_id):
+            return redirect("/")
+
         user_id = session["user_id"]
         messages.delete(message_id)
         return redirect("/")
@@ -212,35 +221,35 @@ def delete_message(message_id):
 
 @app.route("/delete_thread_admin/<int:thread_id>")
 def delete_thread_admin(thread_id):
-    if is_admin():
+    if user.is_admin_in():
         thread.delete_admin(thread_id)
         return redirect("/admin")
     return redirect("/login")
 
 @app.route("/delete_message_admin/<int:message_id>")
 def delete_message_admin(message_id):
-    if is_admin():
+    if user.is_admin_in():
         messages.delete_admin(message_id)
         return redirect("/admin")
     return redirect("/login")
 
 @app.route("/delete_user_admin/<int:user_id>")
 def delete_user_admin(user_id):
-    if is_admin():
+    if user.is_admin_in():
         user.delete(user_id)
         return redirect("/admin")
     return redirect("/login")
 
 @app.route("/return_user_admin/<int:user_id>")
 def return_user_admin(user_id):
-    if is_admin():
+    if user.is_admin_in():
         user.return_user(user_id)
         return redirect("/admin")
     return redirect("/login")
 
 @app.route("/new_limited_topic")
 def new_limited_topic():
-    if is_admin():
+    if user.is_admin_in():
         return render_template("new_limited_topic.html")
     return redirect("/login")
 
@@ -261,21 +270,21 @@ def create_limited_topic():
 
 @app.route("/add_user_permissions/<int:topic_id>")
 def add_user_permissions(topic_id):
-    if is_admin():
+    if user.is_admin_in():
         users = limits.get_users()
         return render_template("add_permissions.html", topic_id=topic_id, users=users)
     return redirect("/login")
 
 @app.route("/remove_topic_permission/<int:user_id>/<int:topic_id>")
 def remove_topic_permission(user_id, topic_id):
-    if is_admin():
+    if user.is_admin_in():
         limits.remove_permission(user_id, topic_id)
         return redirect(f"/add_user_permissions/{topic_id}")
     return redirect("/login")
 
 @app.route("/add_topic_permission/<int:user_id>/<int:topic_id>")
 def add_topic_permission(user_id, topic_id):
-    if is_admin():
+    if user.is_admin_in():
         limits.add_pemission(user_id, topic_id)
         return redirect(f"/add_user_permissions/{topic_id}")
     return redirect("/login")

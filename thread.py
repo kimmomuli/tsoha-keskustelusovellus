@@ -20,12 +20,15 @@ def add_thread(topic_id, thread_title):
 
 def update_title(id, new_title):
     try:
-        sql = "UPDATE thread SET thread_title=:new_title WHERE id=:id"
-        db.session.execute(sql, {"new_title":new_title, "id":id})
-        db.session.commit()
+        if is_my_thread(id):
+            sql = "UPDATE thread SET thread_title=:new_title WHERE id=:id"
+            db.session.execute(sql, {"new_title":new_title, "id":id})
+            db.session.commit()
+            return True
     except:
         return False
-    return True
+    return False
+
 
 def get_topic_id(thread_title):
     sql = "SELECT topic_id FROM thread WHERE thread_title=:thread_title"
@@ -49,4 +52,11 @@ def delete_admin(thread_id):
     db.session.execute(sql, {"id":thread_id})
     db.session.commit()
 
-
+def is_my_thread(thread_id):
+    try:
+        sql = "SELECT id FROM thread WHERE id=:thread_id AND owner_id=:user_id"
+        result = db.session.execute(sql, {"thread_id":thread_id, "owner_id":session["user_id"]})
+        return result[0] is not None
+    except:
+        return False
+    return False

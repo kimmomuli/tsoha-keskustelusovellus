@@ -32,3 +32,7 @@ def delete_admin(message_id):
     sql = "DELETE FROM messages WHERE id=:id"
     db.session.execute(sql, {"id":message_id})
     db.session.commit()
+
+def get_thread_id(message_id):
+    sql = "SELECT thread_id FROM messages WHERE id=:id"
+    return db.session.execute(sql, {"id":message_id}).fetchone()[0]

@@ -1,7 +1,7 @@
 from flask import session, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
-import secrets
+import secrets, limits
 
 def login(username, password):
     sql = "SELECT password, id, admin FROM users WHERE username=:username AND visible = 1"
@@ -61,3 +61,19 @@ def return_user(id):
     sql = "UPDATE users SET visible=1 WHERE id=:id"
     db.session.execute(sql, {"id":id})
     db.session.commit()
+
+def is_admin_in():
+    try:
+        if is_admin(session["username"]):
+            return True
+    except:
+        return False
+    return True
+
+def user_permission(topic_id):
+    try:
+        if limits.have_permission(session["user_id"], topic_id):
+            return True
+    except:
+        return False
+    return False
