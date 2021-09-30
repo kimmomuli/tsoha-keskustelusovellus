@@ -7,6 +7,20 @@
 <p><a id="new_topic" class="btn btn-primary btn-lg btn-block" href="/admin">Pääkäyttäjä toiminnot</a></p>
 {% endif %}
 
+<h1 id="title">Rajatut aiheet</h1>
+
+{% if limited %}
+{% for topic in limited %}
+<ul class="list-unstyled">
+<li class="media">
+    <div class="media-body">
+    <h4 class="mt-0 mb-1"><a href="/get_limited_threads/{{ topic[1] }}">{{ topic[0] }}</a></h4>
+</li>
+<hr>
+</ul>
+{% endfor %}
+{% endif %}
+
 <h1 id="title">Aiheet</h1>
 
 {% if error %}

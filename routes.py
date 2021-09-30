@@ -5,7 +5,12 @@ from werkzeug.exceptions import abort
 
 @app.route("/")
 def index():
-    return render_template("index.html", topics = topic.get_all())
+    try:
+        limited = limits.get_limited_topics(session["user_id"])
+        return render_template("index.html", topics = topic.get_all(), limited=limited)
+    except:
+        return render_template("index.html", topics = topic.get_all())
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -74,7 +79,10 @@ def create_topic():
 
 @app.route("/threads/<int:topic_id>")
 def threads(topic_id):
-    return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id, topic_title=topic.get_title(topic_id))
+    if not topic.is_topic_limited(topic_id):
+        return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id, topic_title=topic.get_title(topic_id))
+    return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id, topic_title=topic.get_limited_title(topic_id))
+    
 
 @app.route("/new_thread/<int:topic_id>")
 def new_thread(topic_id):
@@ -87,6 +95,13 @@ def create_thread(topic_id):
 
     if len(thread_topic) < 1 or len(thread_topic) > 100:
         return render_template("new_thread.html", topic_id=topic_id, message="Ketjun pituus pitää olla 1 - 100 merkkiä")
+
+    if topic.is_topic_limited(topic_id):
+        try:
+            if limits.have_permission(session["user_id"], topic_id):
+                return redirect(f"/get_limited_threads/{topic_id}")
+        except:
+            return("/login")
 
     if not thread.add_thread(topic_id, thread_topic):
         return render_template("new_thread.html", topic_id=topic_id, message = "Viestiketjun lisääminen ei onnistunut")
@@ -114,6 +129,13 @@ def create_message(thread_id):
 
 @app.route("/edit_thread_title/<int:thread_id>")
 def edit_thread_title(thread_id):
+    topic_id = thread.get_topic_id(thread_id)
+    if topic.is_topic_limited(topic_id):
+        try:
+            if limits.have_permission(session["user_id"], topic_id):
+                return render_template("edit_thread.html", thread_id=thread_id)
+        except:
+            return("/login")
     return render_template("edit_thread.html", thread_id=thread_id)
 
 @app.route("/update_thread_title/<int:thread_id>", methods=["POST"])
@@ -133,6 +155,11 @@ def update_thread_title(thread_id):
 def delete_thread(thread_id):
     try:
         user_id = session["user_id"]
+        topic_id = thread.get_topic_id(thread_id)
+        if topic.is_topic_limited(topic_id):
+            if limits.have_permission(user_id, topic_id):
+                thread.delete(thread_id, user_id)
+                return redirect("/")
         thread.delete(thread_id, user_id)
         return redirect("/")
     except:
@@ -252,3 +279,13 @@ def add_topic_permission(user_id, topic_id):
         limits.add_pemission(user_id, topic_id)
         return redirect(f"/add_user_permissions/{topic_id}")
     return redirect("/login")
+
+@app.route("/get_limited_threads/<int:topic_id>")
+def get_limited_threads(topic_id):
+        try:
+            if topic.is_topic_limited(topic_id):
+                if limits.have_permission(session["user_id"], topic_id):
+                    return render_template("threads.html", thread_list=thread.get_threads(topic_id), topic_id=topic_id, topic_title=topic.get_limited_title(topic_id))        
+            return redirect("/")
+        except:
+            return redirect("/login")
