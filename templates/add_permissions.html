@@ -15,7 +15,6 @@
 <ul class="list-unstyled">
 <li class="media">
     <div class="media-body">
-    {% if user[1] != session.user_id %}
     {% if user[2] %}
 
     <h4 class="mt-0 mb-1">{{ user[0] }} <a class="btn btn-primary" href="/remove_topic_permission/{{ user[1] }}/{{ topic_id }}">Poista käyttäjä alueelta</a></h4>
@@ -26,7 +25,6 @@
     
     {% endif %}
     <hr>
-    {% endif %}
     </div>
 </li>
 </ul>

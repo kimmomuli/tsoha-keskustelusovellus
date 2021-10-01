@@ -3,4 +3,7 @@
 disable=missing-module-docstring,
         missing-function-docstring,
         import-error,
-        cyclic-import
+        cyclic-import,
+        bare-except
+
+ignored-classes=scoped_session
