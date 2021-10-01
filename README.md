@@ -1,6 +1,6 @@
 # tsoha-keskustelusovellus
 
-Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käyttäjä voi luoda oman keskusteluketjun tai osallistua muiden luomiin ketjuihin.
+Voit luoda käyttäjätunnuksen, jolla voi kirjautua sisään. Etusivulla näet listan aiheista ja voit luoda oman aiheen. Viestiketjuihin pääset klikkaamalla aihetta. Voit luoda omia viestiketjuja tai osallistua, jonkin toisen tekemään viestiketjuun. Voit poistaa vain omia viestejä ja viestijetjuja. Aiheita voi poistaa vain ylläpitäjä.
 
 ### Ominaisuuksia:
 - [x] Käyttäjä voi luoda tunnuksen. Tunnuksella voi kirjautua sisään ja ulos.
@@ -21,3 +21,10 @@ Sovellukselle luotiin vain yksi ylläpitäjä. Voit testata ylläpitäjän toimi
 tunnus | salasana
 -------|---------
 adminadmin | adminadmin
+
+### Kehittämis ideoita
+
+- Kuvien liittäminen viestiin
+- Videon liittäminen viestiin
+- Viestien muokkaus ominaisuus.
+- Mahdollisuus antaa peukku tai alapeukku viestille
