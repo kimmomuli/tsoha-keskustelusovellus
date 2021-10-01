@@ -28,3 +28,5 @@ adminadmin | adminadmin
 - Videon liittäminen viestiin
 - Viestien muokkaus ominaisuus.
 - Mahdollisuus antaa peukku tai alapeukku viestille
+
+ Pylint arvosana 9.57/10
