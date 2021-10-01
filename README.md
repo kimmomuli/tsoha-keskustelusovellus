@@ -16,3 +16,8 @@ Sovelluksessa näkyy eri aiheita. Eri aiheiden alla on keskusteluketjuja. Käytt
 - [x] Ylläpitäjä voi luoda rajoitetun alueen ja määrittää kellä on pääsy rajoitetulle alueelle.
 
 Linkki [Herokuun](https://tsoha-keskustelusovellus.herokuapp.com/)
+
+Sovellukselle luotiin vain yksi ylläpitäjä. Voit testata ylläpitäjän toimintoja tunnuksella:
+tunnus | salasana
+-------|---------
+adminadmin | adminadmin
